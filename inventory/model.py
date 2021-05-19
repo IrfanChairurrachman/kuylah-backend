@@ -5,6 +5,10 @@ from random import randint
 
 from django.urls import path, include
 
+def get_data():
+    metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
+    return metadata
+
 def get_wisata():
     wisata = []
     with open('inventory/dataset.csv','r') as f:
@@ -17,8 +21,8 @@ def get_wisata():
     return wisata
 
 
-def get_popular(day=1):
-    metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
+def get_popular(metadata, day=1):
+    # metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
     # metadata = pd.read_csv('dataset.csv', low_memory=False)
     # Calculate mean of vote average column
     C = metadata['vote_average'].mean()
