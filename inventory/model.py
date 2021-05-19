@@ -3,11 +3,12 @@ from collections import OrderedDict
 import pandas as pd
 from random import randint
 
-from django.urls import path, include
+# from django.urls import path, include
 
-def get_data():
-    metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
-    return metadata
+
+# def get_data():
+#     metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
+#     return metadata
 
 def get_wisata():
     wisata = []
@@ -47,16 +48,23 @@ def get_popular(metadata, day=1):
     if day > len(df):
         day = 1
 
-    df_baru = [df[randint(0,len(df) - 1)] for i in range(day * 2)]
-    # return filtered
-    return df_baru
+    content = {i+1: [df[randint(0,len(df) - 1)] for i in range(2)] for i in range(day)}
 
-# df = get_popular()
-# df_baru = df.to_dict(into=OrderedDict)
+    # for i in range(day):
+    #     content.append()
+
+    # df_baru = [df[randint(0,len(df) - 1)] for i in range(day * 2)]
+    # return filtered
+    return content
+
+# metadata = pd.read_csv('dataset.csv', low_memory=False)
+# df = get_popular(metadata, 2)
+# # df_baru = df.to_dict(into=OrderedDict)
 # print(type(df))
 
-# print(len(df))
+# print(len(df), end='/n/n')
 
+# print(df)
 # day = 2
 # df_baru = [df[randint(0,len(df))] for i in range(day * 2)]
 

@@ -32,6 +32,7 @@ def destination_list(request, format=None):
     elif request.method == 'POST':
         
         data = {'response': 'TIDAK ADA DAY NYAA'}
+
         # print(type(data))
 
         # print(type(data))
@@ -41,7 +42,7 @@ def destination_list(request, format=None):
 
         # print(type(response))
         # print(response)
-
+        # key = ['day', 'title', 'budget']
         if 'day' in request.data:
 
             day = int(request.data['day'])
@@ -50,9 +51,15 @@ def destination_list(request, format=None):
 
             test = get_popular(metadata, day)
 
+            response_data = {
+                "title": request.data['title'],
+                "day": request.data['day'],
+                "budget": request.data['budget'],
+                "destination": test,
+            }
             # print(test)
             # test = request.data
-            return JsonResponse(test, safe=False, status=201)
+            return JsonResponse(response_data, safe=False, status=201)
         
         response = JsonResponse(data, safe=False)
         return response
