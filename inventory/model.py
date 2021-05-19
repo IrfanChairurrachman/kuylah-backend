@@ -47,7 +47,7 @@ def get_popular(metadata, day=1):
     if day > len(df):
         day = 1
 
-    df_baru = [df[randint(0,len(df))] for i in range(day * 2)]
+    df_baru = [df[randint(0,len(df) - 1)] for i in range(day * 2)]
     # return filtered
     return df_baru
 
