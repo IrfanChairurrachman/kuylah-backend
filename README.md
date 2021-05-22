@@ -45,3 +45,11 @@ Simple version with Vscode in this [link](https://www.petanikode.com/git-vscode/
 - Upload your file to github by running `git push origin master`. See your latest update on your github repo.
 
 - Make pull request to source code.
+
+### Running code in VM GCP
+
+- go to kuylah/settings.py and change ALLOWED_HOSTS from empty to your VM IP address.
+
+- run `sudo nohup python3 manage.py runserver 0.0.0.0:80` and close the terminal.
+
+- Service will running in the bakcground because `nohup` command.
