@@ -31,23 +31,8 @@ def destination_list(request, format=None):
 
     elif request.method == 'POST':
         
-        data = {'response': 'TIDAK ADA DAY NYAA'}
-
-        # print(type(data))
-
-        # print(type(data))
-
-
-        # print(type(request.data))
-
-        # print(type(response))
-        # print(response)
-        # key = ['day', 'title', 'budget']
-        if 'day' in request.data:
-
+        try:
             day = int(request.data['day'])
-
-            # print(type(day))
 
             test = get_popular(metadata, day)
 
@@ -60,8 +45,11 @@ def destination_list(request, format=None):
             # print(test)
             # test = request.data
             return JsonResponse(response_data, safe=False, status=201)
-        
-        response = JsonResponse(data, safe=False)
-        return response
+        except:
+            data = {'response': 'Error atau Data tidak lengkap, harus ada `title`, `day`, `budget` dan `category`',
+                    'code':'400 bad request'}
 
-        # return JsonResponse(serializer.errors, status=400)
+            # print(type(request.data))
+
+            response = JsonResponse(data, safe=False, status=400)
+            return response

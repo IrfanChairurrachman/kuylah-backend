@@ -42,11 +42,13 @@ Simple version with Vscode in this [link](https://www.petanikode.com/git-vscode/
 
 - To commit your changes, run `git commit -m "your message"`. run `git log` to see if your commit are working.
 
-- Upload your file to github by running `git push origin master`. See your latest update on your github repo.
+- Upload your file to github by running `git push origin main`. See your latest update on your github repo.
 
 - Make pull request to source code.
 
 ### Running code in VM GCP
+
+- get latest project version by `git pull origin main` or if didn't exist yet, download it by `git clone [git url]`
 
 - go to kuylah/settings.py and change ALLOWED_HOSTS from empty to your VM IP address.
 

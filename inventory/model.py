@@ -2,6 +2,7 @@ import csv
 from collections import OrderedDict
 import pandas as pd
 from random import randint
+import numpy as np
 
 # from django.urls import path, include
 
@@ -23,8 +24,7 @@ def get_wisata():
 
 
 def get_popular(metadata, day=1):
-    # metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
-    # metadata = pd.read_csv('dataset.csv', low_memory=False)
+    
     # Calculate mean of vote average column
     C = metadata['vote_average'].mean()
     # Calculate the minimum number of votes required to be in the chart, m
@@ -40,32 +40,27 @@ def get_popular(metadata, day=1):
 
     filtered['score'] = filtered.apply(weighted_rating, axis=1)
 
+    filtered['htm_weekday'] = filtered['htm_weekday'].fillna(0)
+
     #Sort movies based on score calculated above
     filtered = filtered.sort_values('score', ascending=False)
 
-    df = filtered.to_dict('records', into=OrderedDict)
+    df = filtered.to_dict('records')
+    # df = filtered.to_dict('records', into=OrderedDict)
 
     if day > len(df):
         day = 1
-
+    
     content = {i+1: [df[randint(0,len(df) - 1)] for i in range(2)] for i in range(day)}
 
-    # for i in range(day):
-    #     content.append()
+    total_htm = 0
 
-    # df_baru = [df[randint(0,len(df) - 1)] for i in range(day * 2)]
-    # return filtered
+    for i in content:
+        for j in content[i]:
+            total_htm += j['htm_weekday']
+    
     return content
 
 # metadata = pd.read_csv('dataset.csv', low_memory=False)
-# df = get_popular(metadata, 2)
+# df, budget = get_popular(metadata, 2)
 # # df_baru = df.to_dict(into=OrderedDict)
-# print(type(df))
-
-# print(len(df), end='/n/n')
-
-# print(df)
-# day = 2
-# df_baru = [df[randint(0,len(df))] for i in range(day * 2)]
-
-# print(len(df_baru))
