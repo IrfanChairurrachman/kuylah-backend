@@ -6,9 +6,11 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+import pandas as pd
 from inventory.model import *
 # Create your views here.
 
+metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
 
 @api_view(['GET', 'POST'])
 def destination_list(request, format=None):
@@ -24,10 +26,10 @@ def destination_list(request, format=None):
         return JsonResponse(test, safe=False)
 
     elif request.method == 'POST':
+
         try:
             # change request.data['day'] from user to int type
             day = int(request.data['day'])
-
             # get itinerary data
             test = get_popular(metadata, day)
 
@@ -40,7 +42,6 @@ def destination_list(request, format=None):
             }
             # print(test)
             # test = request.data
-
             # change response_data to JSON format
             return JsonResponse(response_data, safe=False, status=201)
         except:
