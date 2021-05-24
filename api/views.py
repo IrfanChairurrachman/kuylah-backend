@@ -31,13 +31,14 @@ def destination_list(request, format=None):
             # change request.data['day'] from user to int type
             day = int(request.data['day'])
             # get itinerary data
-            test = get_popular(metadata, day)
+            test, htm_total = get_popular(metadata, day)
 
             # assign data structure for json in dict type
             response_data = {
                 "title": request.data['title'],
                 "day": request.data['day'],
                 "budget": request.data['budget'],
+                "htm_total": htm_total,
                 "destination": test,
             }
             # print(test)
