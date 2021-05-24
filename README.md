@@ -26,7 +26,7 @@
 
 ### Get Code Latest Version from Source Repo ([irfanchairurrachman/kuylahbackend](https://github.com/IrfanChairurrachman/kuylah-backend))
 
-- Connect source repo on your local machine by add upstream remote. run this command on your project terminal: `git add remote upstream https://github.com/IrfanChairurrachman/kuylah-backend.git`
+- Connect source repo on your local machine by add upstream remote. run this command on your project terminal: `git remote add upstream https://github.com/IrfanChairurrachman/kuylah-backend.git`
 
 - run `git remote -v` to check if upstream added
 
