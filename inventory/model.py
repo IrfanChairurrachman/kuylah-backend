@@ -59,7 +59,7 @@ def get_popular(metadata, day=1):
         for j in content[i]:
             total_htm += j['htm_weekday']
     
-    return content
+    return content, total_htm
 
 # metadata = pd.read_csv('dataset.csv', low_memory=False)
 # df, budget = get_popular(metadata, 2)
