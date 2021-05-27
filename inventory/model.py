@@ -11,6 +11,8 @@ import numpy as np
 #     metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
 #     return metadata
 
+# print("MASOK")
+
 def get_wisata():
     wisata = []
     with open('inventory/dataset.csv','r') as f:
@@ -51,16 +53,18 @@ def get_popular(metadata, day=1):
     if day > len(df):
         day = 1
     
-    content = {i+1: [df[randint(0,len(df) - 1)] for i in range(2)] for i in range(day)}
+    content = [df[randint(0,len(df) - 1)] for i in range(day * 2)]
 
     total_htm = 0
 
     for i in content:
-        for j in content[i]:
-            total_htm += j['htm_weekday']
+        total_htm += i['htm_weekday']
     
     return content, total_htm
 
 # metadata = pd.read_csv('dataset.csv', low_memory=False)
 # df, budget = get_popular(metadata, 2)
-# # df_baru = df.to_dict(into=OrderedDict)
+# # # df_baru = df.to_dict(into=OrderedDict)
+# for i in df:
+#     print(i['htm_weekday'])
+# print(budget)
