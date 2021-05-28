@@ -52,19 +52,29 @@ def get_popular(metadata, day=1):
 
     if day > len(df):
         day = 1
+    elif day < 1:
+        day = 1
     
-    content = [df[randint(0,len(df) - 1)] for i in range(day * 2)]
+    # content = [df[randint(0,len(df) - 1)] for i in range(day * 2)]
+
+    content = []
+
+    for i in range(day):
+        dest_list = {"schedule":[df[randint(0,len(df))-1] for j in range(2)]}
+        content.append(dest_list)
+    # content = [{"schedule": [df[randint(0,len(df) - 1)] for j in range(2)] for i in range(day)}]
 
     total_htm = 0
 
-    for i in content:
-        total_htm += i['htm_weekday']
+    # for i in content:
+    #     total_htm += i['htm_weekday']
     
     return content, total_htm
 
 # metadata = pd.read_csv('dataset.csv', low_memory=False)
 # df, budget = get_popular(metadata, 2)
-# # # df_baru = df.to_dict(into=OrderedDict)
-# for i in df:
-#     print(i['htm_weekday'])
-# print(budget)
+# # # # df_baru = df.to_dict(into=OrderedDict)
+# # for i in df:
+# #     print(i['htm_weekday'])
+# # print(budget)
+# print(df[0])
