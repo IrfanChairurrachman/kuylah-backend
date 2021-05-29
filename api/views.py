@@ -8,9 +8,27 @@ from rest_framework.response import Response
 
 import pandas as pd
 from inventory.model import *
+#Import TfIdfVectorizer from scikit-learn
+from sklearn.feature_extraction.text import TfidfVectorizer
+# Import linear_kernel
+from sklearn.metrics.pairwise import linear_kernel
 # Create your views here.
 
 metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
+
+tfidf = TfidfVectorizer()
+
+# metadata = pd.read_csv('dataset.csv', low_memory=False)
+
+#Replace NaN with an empty string
+metadata['description'] = metadata['description'].fillna('')
+
+#Construct the required TF-IDF matrix by fitting and transforming the data
+tfidf_matrix = tfidf.fit_transform(metadata['description'])
+
+# Compute the cosine similarity matrix
+cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
+
 
 @api_view(['GET', 'POST'])
 def destination_list(request, format=None):
@@ -31,7 +49,7 @@ def destination_list(request, format=None):
             # change request.data['day'] from user to int type
             day = int(request.data['day'])
             # get itinerary data
-            test, htm_total = get_popular(metadata, day)
+            test, htm_total = get_recommendations(metadata, cosine_sim, day)
 
             # assign data structure for json in dict type
             response_data = {
@@ -41,7 +59,7 @@ def destination_list(request, format=None):
                 "htm_total": htm_total,
                 "destination": test,
             }
-            # print(test)
+            # print(reqest.data['category'])
             # test = request.data
             # change response_data to JSON format
             return JsonResponse(response_data, safe=False, status=201)
