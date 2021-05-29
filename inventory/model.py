@@ -99,9 +99,31 @@ def get_recommendations(metadata, cosine_sim, day=1):
 
 
 # DIBAWAH UNTUK NGE TEST
+# UNCOMMENT UNTUK TEST
 
-# metadata = pd.read_csv('dataset.csv', low_memory=False)
-# df, budget = get_recommendations(metadata, 4)
+# #Import TfIdfVectorizer from scikit-learn
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# # Import linear_kernel
+# from sklearn.metrics.pairwise import linear_kernel
+# # Create your views here.
+
+# # metadata = pd.read_csv('dataset.csv', low_memory=False)
+
+# tfidf = TfidfVectorizer()
+
+# # metadata = pd.read_csv('dataset.csv', low_memory=False)
+
+# #Replace NaN with an empty string
+# metadata['description'] = metadata['description'].fillna('')
+
+# #Construct the required TF-IDF matrix by fitting and transforming the data
+# tfidf_matrix = tfidf.fit_transform(metadata['description'])
+
+# # Compute the cosine similarity matrix
+# cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
+
+# # parameter (dataframe, cosine_sim, day)
+# df, budget = get_recommendations(metadata, cosine_sim, 4)
 
 # print(budget)
 # print(df[1])
