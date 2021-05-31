@@ -54,6 +54,7 @@ def destination_list(request, format=None):
             # assign data structure for json in dict type
             response_data = {
                 "title": request.data['title'],
+                "category": request.data['category'],
                 "day": request.data['day'],
                 "budget": request.data['budget'],
                 "htm_total": htm_total,
