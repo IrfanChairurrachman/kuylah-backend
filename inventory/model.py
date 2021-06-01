@@ -82,8 +82,8 @@ def get_recommendations(metadata, cosine_sim, day=1):
     rec_no = get_similiar(df[randint(0,len(df))-1]['nama'], cosine_sim, indices, day)
 
     for j in range(0, day * 2, 2):
-        days = "schedule day " + str(j//2 + 1) # penamaan key baru
-        dest_list = {days: [metadata[rec_no[j]], metadata[rec_no[j+1]]]}
+        #days = "schedule day " + str(j//2 + 1) # penamaan key baru
+        dest_list = {"schedule": [metadata[rec_no[j]], metadata[rec_no[j+1]]]}
         content.append(dest_list)
 
     # FUNGSI SEBELUM MENGGUNAKAN SKLEARN
