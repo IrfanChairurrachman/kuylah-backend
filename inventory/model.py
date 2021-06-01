@@ -45,7 +45,7 @@ def get_similiar(title, cosine_sim, indices, day=1):
 
     return dest_indices
 
-def get_recommendations(metadata, cosine_sim, day=1):
+def get_recommendations(metadata, cosine_sim, day=1, category=['alam']):
     # Get indices
     indices = pd.Series(metadata.index, index=metadata['nama']).drop_duplicates()
     # Calculate mean of vote average column
@@ -64,27 +64,34 @@ def get_recommendations(metadata, cosine_sim, day=1):
     filtered['score'] = filtered.apply(weighted_rating, axis=1)
 
     filtered['htm_weekday'] = filtered['htm_weekday'].fillna(0)
+    metadata['htm_weekday'] = metadata['htm_weekday'].fillna(0)
 
     #Sort destionation based on score calculated above
     filtered = filtered.sort_values('score', ascending=False)
 
     df = filtered.to_dict('records')
-    metadata = metadata.to_dict('records')
+    meta_dict = metadata.to_dict('records')
 
     if day > len(df):
         day = 1
     elif day < 1:
         day = 1
     
-    # content = [df[randint(0,len(df) - 1)] for i in range(day * 2)]
+    each = int((day * 2) / len(category))
+
+    name_dest = []
+    for i in category:
+        filtered = metadata.copy().loc[metadata['type'] == i]
+        filter_df = filtered.to_dict('records')
+        each_no = get_similiar(filter_df[randint(0,len(filter_df))-1]['nama'], cosine_sim, indices, day)[:each]
+        # name_dest.append(filter_df[randint(0,len(filter_df))-1]['nama'])
+        for j in each_no:
+            name_dest.append(meta_dict[j])
+    
     content = []
-
-    rec_no = get_similiar(df[randint(0,len(df))-1]['nama'], cosine_sim, indices, day)
-
-    for j in range(0, day * 2, 2):
-        #days = "schedule day " + str(j//2 + 1) # penamaan key baru
-        dest_list = {"schedule": [metadata[rec_no[j]], metadata[rec_no[j+1]]]}
-        content.append(dest_list)
+    for dest in range(0, len(name_dest), 2):
+        day = {'schedule': [name_dest[dest], name_dest[dest+1]]}
+        content.append(day)
 
     # FUNGSI SEBELUM MENGGUNAKAN SKLEARN
     # for i in range(day):
@@ -111,7 +118,7 @@ def get_recommendations(metadata, cosine_sim, day=1):
 # from sklearn.metrics.pairwise import linear_kernel
 # # Create your views here.
 
-# metadata = pd.read_csv("inventory/dataset.csv", low_memory=False)
+# metadata = pd.read_csv("dataset.csv", low_memory=False)
 
 # tfidf = TfidfVectorizer()
 
@@ -136,4 +143,5 @@ def get_recommendations(metadata, cosine_sim, day=1):
 # for schedule_day_dict in df:
 #     for key_of_list in schedule_day_dict:
 #         for dict_of_places in schedule_day_dict[key_of_list]:
-#             print(dict_of_places['nama'])
+#             print(dict_of_places['nama'], end=' ')
+#             print(dict_of_places['htm_weekday'])
