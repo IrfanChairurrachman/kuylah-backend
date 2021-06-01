@@ -3,6 +3,7 @@ from collections import OrderedDict
 import pandas as pd
 from random import randint
 import numpy as np
+from sklearn.utils import _list_indexing
 
 # from django.urls import path, include
 
@@ -81,6 +82,7 @@ def get_recommendations(metadata, cosine_sim, day=1):
     rec_no = get_similiar(df[randint(0,len(df))-1]['nama'], cosine_sim, indices, day)
 
     for j in range(0, day * 2, 2):
+        #days = "schedule day " + str(j//2 + 1) # penamaan key baru
         dest_list = {"schedule": [metadata[rec_no[j]], metadata[rec_no[j+1]]]}
         content.append(dest_list)
 
@@ -92,8 +94,10 @@ def get_recommendations(metadata, cosine_sim, day=1):
 
     total_htm = 0
 
-    # for i in content:
-    #     total_htm += i['htm_weekday']
+    for schedule_day_dict in content:
+        for key_of_list in schedule_day_dict:
+            for dict_of_places in schedule_day_dict[key_of_list]:
+                total_htm += dict_of_places['htm_weekday']
     
     return content, total_htm
 
@@ -107,7 +111,7 @@ def get_recommendations(metadata, cosine_sim, day=1):
 # from sklearn.metrics.pairwise import linear_kernel
 # # Create your views here.
 
-# # metadata = pd.read_csv('dataset.csv', low_memory=False)
+# metadata = pd.read_csv("inventory/dataset.csv", low_memory=False)
 
 # tfidf = TfidfVectorizer()
 
@@ -123,12 +127,13 @@ def get_recommendations(metadata, cosine_sim, day=1):
 # cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
 
 # # parameter (dataframe, cosine_sim, day)
-# df, budget = get_recommendations(metadata, cosine_sim, 4)
+# df, budget = get_recommendations(metadata, cosine_sim, 2)
 
-# print(budget)
-# print(df[1])
+# print("budgetnya", budget)
+# # print(df[1])
 
-# print(len(df))
-# for i in df:
-#     for j in i['schedule']:
-#         print(j['nama'])
+# # print(len(df))
+# for schedule_day_dict in df:
+#     for key_of_list in schedule_day_dict:
+#         for dict_of_places in schedule_day_dict[key_of_list]:
+#             print(dict_of_places['nama'])
