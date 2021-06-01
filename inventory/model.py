@@ -45,7 +45,7 @@ def get_similiar(title, cosine_sim, indices, day=1):
 
     return dest_indices
 
-def get_recommendations(metadata, cosine_sim, day=1, category=['alam']):
+def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya dan Sejarah']):
     # Get indices
     indices = pd.Series(metadata.index, index=metadata['nama']).drop_duplicates()
     # Calculate mean of vote average column
