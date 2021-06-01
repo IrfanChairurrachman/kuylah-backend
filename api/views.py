@@ -33,7 +33,7 @@ cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
 @api_view(['GET', 'POST'])
 def destination_list(request, format=None):
     if request.method == 'GET':
-        # snippets = Snippet.objects.all()
+        snippets = Snippet.objects.all()
         # serializer = SnippetSerializer(snippets, many=True)
         test = get_popular(metadata, 12)
 
@@ -48,8 +48,17 @@ def destination_list(request, format=None):
         try:
             # change request.data['day'] from user to int type
             day = int(request.data['day'])
-            # get itinerary data
-            test, htm_total = get_recommendations(metadata, cosine_sim, day)
+            
+            # Print category and it's type in terminal output
+            print(request.data['category'])
+            print(type(request.data['category']))
+
+            # check input type, if not list just generate random without category
+            if type(request.data['category']) is list:
+                category = request.data['category']
+                test, htm_total = get_recommendations(metadata, cosine_sim, day, category)
+            else:
+                test, htm_total = get_recommendations(metadata, cosine_sim, day)
 
             # assign data structure for json in dict type
             response_data = {
