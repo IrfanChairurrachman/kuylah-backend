@@ -16,9 +16,8 @@ from sklearn.metrics.pairwise import linear_kernel
 
 metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
 
+#Define a TF-IDF Vectorizer Object.
 tfidf = TfidfVectorizer()
-
-# metadata = pd.read_csv('dataset.csv', low_memory=False)
 
 #Replace NaN with an empty string
 metadata['description'] = metadata['description'].fillna('')
@@ -33,15 +32,12 @@ cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
 @api_view(['GET', 'POST'])
 def destination_list(request, format=None):
     if request.method == 'GET':
-        snippets = Snippet.objects.all()
-        # serializer = SnippetSerializer(snippets, many=True)
-        test = get_popular(metadata, 12)
 
-        print(type(test))
+        data = {'response': 'This GET method dont do anything, try POST method'}
 
         print("CLIENT MINTA GET")
 
-        return JsonResponse(test, safe=False)
+        return JsonResponse(data, safe=False)
 
     elif request.method == 'POST':
 
@@ -57,6 +53,7 @@ def destination_list(request, format=None):
             # check input type, if not list just generate random without category
             if type(request.data['category']) is list:
                 category = request.data['category']
+                # Call get_recommendations in model by users input
                 test, htm_total = get_recommendations(metadata, cosine_sim, day, category, budget)
             else:
                 test, htm_total = get_recommendations(metadata, cosine_sim, day, budget=budget)
@@ -70,8 +67,6 @@ def destination_list(request, format=None):
                 "htm_total": htm_total,
                 "destination": test,
             }
-            # print(reqest.data['category'])
-            # test = request.data
             # change response_data to JSON format
             return JsonResponse(response_data, safe=False, status=201)
         except:

@@ -7,25 +7,7 @@ from sklearn.utils import _list_indexing
 import math
 # from django.urls import path, include
 
-
-# def get_data():
-#     metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
-#     return metadata
-
-# print("MASOK")
-
-def get_wisata():
-    wisata = []
-    with open('inventory/dataset.csv','r') as f:
-    # with open('dataset.csv','r') as f:
-        r = csv.DictReader(f)
-        for row in r:
-            print(row)
-            wisata.append(row)
-        # od = collections.OrderedDict(r)
-    return wisata
-
-# Function that takes in movie title as input and outputs most similar destination
+# Function that takes in destinations name as input and outputs most similar destination
 def get_similiar(title, cosine_sim, indices, day=1):
     # Get the index of the dest that matches the name
     idx = indices[title]
@@ -33,7 +15,7 @@ def get_similiar(title, cosine_sim, indices, day=1):
     # Get the pairwsie similarity scores of all destination with input dest
     sim_scores = list(enumerate(cosine_sim[idx]))
 
-    # Sort the movies based on the similarity scores
+    # Sort the destination based on the similarity scores
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
 
     # Get the scores of the similar destionation
@@ -56,7 +38,7 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
     def weighted_rating(x, m=m, C=C):
         v = x['vote_count']
         R = x['vote_average']
-        # Calculation based on the IMDB formula
+        # Calculation based on the vote_average and vote_count formula
         return (v/(v+m) * R) + (m/(m+v) * C)
     
     filtered = metadata.copy().loc[metadata['vote_count'] >= m]
@@ -82,16 +64,17 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
     count = 0
 
     while count < 5:
+        # Variables to store destinations recommended by get_similiar function
         name_dest = []
+        # Iterate each category and find dest by category
         for i in category:
             filtered_df = filtered.copy().loc[filtered['type'] == i]
             filtered_dict = filtered_df.to_dict('records')
+            # call get_similiar and store the index values in each_no
             each_no = get_similiar(filtered_dict[randint(0,len(filtered_dict))-1]['nama'], cosine_sim, indices, day)[:each]
-            # name_dest.append(filter_df[randint(0,len(filter_df))-1]['nama'])
+            # search each index value in metadata and append to name_dest
             for j in each_no:
                 name_dest.append(meta_dict[j])
-
-        # sorted_name_dest = sorted(name_dest, key=lambda i: i['htm_weekday']) # Ascending
 
         # Count total_htm by iterating the list
         total_htm=0
@@ -104,6 +87,7 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
         # If not, then start looping until total_htm below the budget
         count += 1
 
+    # Data Structure to store to views for json response
     content = []
     for dest in range(0, len(name_dest), 2):
         day = {'schedule': [name_dest[dest], name_dest[dest+1]]}
