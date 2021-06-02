@@ -45,13 +45,13 @@ def get_similiar(title, cosine_sim, indices, day=1):
 
     return dest_indices
 
-def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya dan Sejarah']):
+def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya dan Sejarah'], budget=50000):
     # Get indices
     indices = pd.Series(metadata.index, index=metadata['nama']).drop_duplicates()
     # Calculate mean of vote average column
     C = metadata['vote_average'].mean()
     # Calculate the minimum number of votes required to be in the chart, m
-    m = metadata['vote_count'].quantile(0.5)
+    m = metadata['vote_count'].quantile(0.02)
 
     def weighted_rating(x, m=m, C=C):
         v = x['vote_count']
@@ -63,11 +63,11 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
 
     filtered['score'] = filtered.apply(weighted_rating, axis=1)
 
-    filtered['htm_weekday'] = filtered['htm_weekday'].fillna(0)
-    metadata['htm_weekday'] = metadata['htm_weekday'].fillna(0)
+    filtered['htm_weekday'] = filtered['htm_weekday'].fillna(0) # filtered: metadata yg vote_count > m
+    metadata['htm_weekday'] = metadata['htm_weekday'].fillna(0) # dan udah diweighted masuk ke 'score'
 
     #Sort destionation based on score calculated above
-    filtered = filtered.sort_values('score', ascending=False)
+    filtered = filtered.sort_values('score', ascending=False) # sorting filtered bdsk 'score'
 
     df = filtered.to_dict('records')
     meta_dict = metadata.to_dict('records')
@@ -81,13 +81,20 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
 
     name_dest = []
     for i in category:
-        filtered = metadata.copy().loc[metadata['type'] == i]
-        filter_df = filtered.to_dict('records')
-        each_no = get_similiar(filter_df[randint(0,len(filter_df))-1]['nama'], cosine_sim, indices, day)[:each]
+        filtered_df = filtered.copy().loc[filtered['type'] == i]
+        filtered_dict = filtered_df.to_dict('records')
+        each_no = get_similiar(filtered_dict[randint(0,len(filtered_dict))-1]['nama'], cosine_sim, indices, day)[:each]
         # name_dest.append(filter_df[randint(0,len(filter_df))-1]['nama'])
         for j in each_no:
             name_dest.append(meta_dict[j])
-    
+
+    # sorted_name_dest = sorted(name_dest, key=lambda i: i['htm_weekday']) # Ascending
+
+    total_htm=0
+
+    for dest in name_dest:
+        total_htm += dest['htm_weekday']
+
     content = []
     for dest in range(0, len(name_dest), 2):
         day = {'schedule': [name_dest[dest], name_dest[dest+1]]}
@@ -99,12 +106,13 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
     #     content.append(dest_list)
     # content = [{"schedule": [df[randint(0,len(df) - 1)] for j in range(2)] for i in range(day)}]
 
-    total_htm = 0
+    # total_htm = 0
 
-    for schedule_day_dict in content:
-        for key_of_list in schedule_day_dict:
-            for dict_of_places in schedule_day_dict[key_of_list]:
-                total_htm += dict_of_places['htm_weekday']
+    # for schedule_day_dict in content:
+    #     for key_of_list in schedule_day_dict:
+    #         for dict_of_places in schedule_day_dict[key_of_list]:
+    #             #if total_htm + dict_of_places['htm_weekday'] < budget:
+    #             total_htm += dict_of_places['htm_weekday']
     
     return content, total_htm
 
@@ -112,17 +120,12 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
 # DIBAWAH UNTUK NGE TEST
 # UNCOMMENT UNTUK TEST
 
-# #Import TfIdfVectorizer from scikit-learn
+# Import TfIdfVectorizer and linear_kernel from scikit-learn
 # from sklearn.feature_extraction.text import TfidfVectorizer
-# # Import linear_kernel
 # from sklearn.metrics.pairwise import linear_kernel
-# # Create your views here.
 
-# metadata = pd.read_csv("dataset.csv", low_memory=False)
-
+# metadata = pd.read_csv("inventory/dataset.csv", low_memory=False)
 # tfidf = TfidfVectorizer()
-
-# # metadata = pd.read_csv('dataset.csv', low_memory=False)
 
 # #Replace NaN with an empty string
 # metadata['description'] = metadata['description'].fillna('')
@@ -137,6 +140,7 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
 # df, budget = get_recommendations(metadata, cosine_sim, 2)
 
 # print("budgetnya", budget)
+# # print(min_vote)
 # # print(df[1])
 
 # # print(len(df))
