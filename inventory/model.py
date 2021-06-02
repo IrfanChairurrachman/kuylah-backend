@@ -79,40 +79,35 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
     
     each = int((day * 2) / len(category))
 
-    name_dest = []
-    for i in category:
-        filtered_df = filtered.copy().loc[filtered['type'] == i]
-        filtered_dict = filtered_df.to_dict('records')
-        each_no = get_similiar(filtered_dict[randint(0,len(filtered_dict))-1]['nama'], cosine_sim, indices, day)[:each]
-        # name_dest.append(filter_df[randint(0,len(filter_df))-1]['nama'])
-        for j in each_no:
-            name_dest.append(meta_dict[j])
+    count = 0
 
-    # sorted_name_dest = sorted(name_dest, key=lambda i: i['htm_weekday']) # Ascending
+    while count < 5:
+        name_dest = []
+        for i in category:
+            filtered_df = filtered.copy().loc[filtered['type'] == i]
+            filtered_dict = filtered_df.to_dict('records')
+            each_no = get_similiar(filtered_dict[randint(0,len(filtered_dict))-1]['nama'], cosine_sim, indices, day)[:each]
+            # name_dest.append(filter_df[randint(0,len(filter_df))-1]['nama'])
+            for j in each_no:
+                name_dest.append(meta_dict[j])
 
-    total_htm=0
+        # sorted_name_dest = sorted(name_dest, key=lambda i: i['htm_weekday']) # Ascending
 
-    for dest in name_dest:
-        total_htm += dest['htm_weekday']
+        # Count total_htm by iterating the list
+        total_htm=0
+        for dest in name_dest:
+            total_htm += dest['htm_weekday']
+        
+        # If total htm below the budget, then break the loop
+        if total_htm <= budget:
+            break
+        # If not, then start looping until total_htm below the budget
+        count += 1
 
     content = []
     for dest in range(0, len(name_dest), 2):
         day = {'schedule': [name_dest[dest], name_dest[dest+1]]}
         content.append(day)
-
-    # FUNGSI SEBELUM MENGGUNAKAN SKLEARN
-    # for i in range(day):
-    #     dest_list = {"schedule":[df[randint(0,len(df))-1] for j in range(2)]}
-    #     content.append(dest_list)
-    # content = [{"schedule": [df[randint(0,len(df) - 1)] for j in range(2)] for i in range(day)}]
-
-    # total_htm = 0
-
-    # for schedule_day_dict in content:
-    #     for key_of_list in schedule_day_dict:
-    #         for dict_of_places in schedule_day_dict[key_of_list]:
-    #             #if total_htm + dict_of_places['htm_weekday'] < budget:
-    #             total_htm += dict_of_places['htm_weekday']
     
     return content, total_htm
 
@@ -120,7 +115,7 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
 # DIBAWAH UNTUK NGE TEST
 # UNCOMMENT UNTUK TEST
 
-# Import TfIdfVectorizer and linear_kernel from scikit-learn
+# # Import TfIdfVectorizer and linear_kernel from scikit-learn
 # from sklearn.feature_extraction.text import TfidfVectorizer
 # from sklearn.metrics.pairwise import linear_kernel
 
@@ -137,9 +132,13 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
 # cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
 
 # # parameter (dataframe, cosine_sim, day)
-# df, budget = get_recommendations(metadata, cosine_sim, 2)
+# budget = 50000
+# category = ["Alam", "Pantai"]
+# df, total_htm, count = get_recommendations(metadata, cosine_sim, 2, category, budget)
 
+# print("count", count)
 # print("budgetnya", budget)
+# print("total_htm:", total_htm)
 # # print(min_vote)
 # # print(df[1])
 

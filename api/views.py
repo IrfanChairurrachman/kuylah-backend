@@ -48,6 +48,7 @@ def destination_list(request, format=None):
         try:
             # change request.data['day'] from user to int type
             day = int(request.data['day'])
+            budget = int(request.data['budget'])
             
             # Print category and it's type in terminal output
             print(request.data['category'])
@@ -56,9 +57,9 @@ def destination_list(request, format=None):
             # check input type, if not list just generate random without category
             if type(request.data['category']) is list:
                 category = request.data['category']
-                test, htm_total = get_recommendations(metadata, cosine_sim, day, category)
+                test, htm_total = get_recommendations(metadata, cosine_sim, day, category, budget)
             else:
-                test, htm_total = get_recommendations(metadata, cosine_sim, day)
+                test, htm_total = get_recommendations(metadata, cosine_sim, day, budget=budget)
 
             # assign data structure for json in dict type
             response_data = {
