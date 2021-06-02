@@ -4,7 +4,7 @@ import pandas as pd
 from random import randint
 import numpy as np
 from sklearn.utils import _list_indexing
-
+import math
 # from django.urls import path, include
 
 
@@ -77,7 +77,7 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
     elif day < 1:
         day = 1
     
-    each = int((day * 2) / len(category))
+    each = math.ceil((day * 2) / len(category))
 
     count = 0
 
