@@ -74,8 +74,6 @@ def destination_list(request, format=None):
             data = {'response': 'Error atau Data tidak lengkap, harus ada title, day, budget dan category',
                     'code':'400 bad request'}
 
-            # print(type(request.data))
-
             # change data to JSON format
             response = JsonResponse(data, safe=False, status=400)
             # return response in JSON format
