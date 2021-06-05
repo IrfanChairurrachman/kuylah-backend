@@ -2,7 +2,14 @@
 
 ## TIM KUYLAH GOKIL GOKILL WOHOOO
 
-![KUYLAH](inventory/kuylah.png)
+<br />
+<p align="center">
+  <a href="https://github.com/IrfanChairurrachman/kuylah-backend">
+    <img src="inventory/logo-kuylah.png" alt="Logo" width="200" height="200">
+  </a>
+
+  <h2 align="center">Kuylah</h2>
+</p>
 
 ## HOW TO
 
