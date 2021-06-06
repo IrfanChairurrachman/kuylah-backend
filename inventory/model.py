@@ -89,8 +89,11 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
 
     # Data Structure to store to views for json response
     content = []
-    for dest in range(0, len(name_dest), 2):
-        day = {'schedule': [name_dest[dest], name_dest[dest+1]]}
+    dest_per_day = int(len(name_dest) / day)
+    for i in range(0, len(name_dest), dest_per_day):
+        day = {'schedule':[]}
+        for j in range(dest_per_day):
+            day['schedule'].append(name_dest[i + j])
         content.append(day)
     
     return content, total_htm
