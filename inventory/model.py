@@ -43,8 +43,9 @@ def find_closest_sum(numbers, target, n):
 # result_shown = find_closest_sum(numbers, 20, 4)
 # print (result_shown) # output: [1,5,5,10]
 
-def get_recommendations(metadata, topten, cosine_sim, usr, day=1, category=['Alam', 'Budaya dan Sejarah'], budget=50000):
+def get_recommendations(metadata, cosine_sim, usr, day=1, category=['Alam', 'Budaya dan Sejarah'], budget=50000):
     # Get dest recommendation by user_id based collaborative filtering
+    topten = pd.read_csv("inventory/top_ten_ranked.csv", low_memory=False)
     rec = topten.loc[topten['user_id'] == usr]
     # change df to dict
     rec_dict = rec.to_dict('records')
@@ -79,7 +80,7 @@ def get_recommendations(metadata, topten, cosine_sim, usr, day=1, category=['Ala
     elif day < 1:
         day = 1
     
-    each = math.ceil((day * 6) / len(category))
+    each = math.ceil((day * 3) / len(category))
 
     # count = 0
     # while count < 5:

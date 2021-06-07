@@ -16,7 +16,6 @@ from sklearn.metrics.pairwise import linear_kernel
 # Create your views here.
 
 metadata = pd.read_csv('inventory/dataset.csv', low_memory=False)
-topten = pd.read_csv("inventory/top_ten_ranked.csv", low_memory=False)
 
 #Define a TF-IDF Vectorizer Object.
 tfidf = TfidfVectorizer()
@@ -47,7 +46,7 @@ def destination_list(request, format=None):
             # change request.data['day'] from user to int type
             day = int(request.data['day'])
             budget = int(request.data['budget'])
-            usr = randint(1, 1000)
+            usr = randint(1, 50)
             
             # Print category and it's type in terminal output
             print(request.data['category'])
@@ -58,9 +57,9 @@ def destination_list(request, format=None):
             if type(request.data['category']) is list:
                 category = request.data['category']
                 # Call get_recommendations in model by users input
-                test, htm_total = get_recommendations(metadata, topten, cosine_sim, usr, day, category, budget)
+                test, htm_total = get_recommendations(metadata, cosine_sim, usr, day, category, budget)
             else:
-                test, htm_total = get_recommendations(metadata, topten, cosine_sim, usr, day, budget=budget)
+                test, htm_total = get_recommendations(metadata, cosine_sim, usr, day, budget=budget)
 
             # assign data structure for json in dict type
             response_data = {
