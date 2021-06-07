@@ -43,7 +43,11 @@ def find_closest_sum(numbers, target, n):
 # result_shown = find_closest_sum(numbers, 20, 4)
 # print (result_shown) # output: [1,5,5,10]
 
-def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya dan Sejarah'], budget=50000):
+def get_recommendations(metadata, topten, cosine_sim, usr, day=1, category=['Alam', 'Budaya dan Sejarah'], budget=50000):
+    # Get dest recommendation by user_id based collaborative filtering
+    rec = topten.loc[topten['user_id'] == usr]
+    # change df to dict
+    rec_dict = rec.to_dict('records')
     # Get indices
     indices = pd.Series(metadata.index, index=metadata['nama']).drop_duplicates()
     # Calculate mean of vote average column
@@ -81,12 +85,16 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
     # while count < 5:
         # Variables to store destinations recommended by get_similiar function
     name_dest = []
+
+    for i in range(day):
+        x = indices[rec_dict[i]['nama']]
+        name_dest.append(meta_dict[x])
     # Iterate each category and find dest by category
     for i in category:
         filtered_df = filtered.copy().loc[filtered['type'] == i]
         filtered_dict = filtered_df.to_dict('records')
         # call get_similiar and store the index values in each_no
-        each_no = get_similiar(filtered_dict[randint(0,len(filtered_dict))-1]['nama'], cosine_sim, indices, day, total = each)[:each]
+        each_no = get_similiar(filtered_dict[randint(0,len(filtered_dict))-1]['nama'], cosine_sim, indices, day, total = each)
         # search each index value in metadata and append to name_dest
         for j in each_no:
             name_dest.append(meta_dict[j])
@@ -137,7 +145,8 @@ def get_recommendations(metadata, cosine_sim, day=1, category=['Alam', 'Budaya d
             day['schedule'].append(final_name_dest[i + j])
         content.append(day)
     
-    return content, total_htm, len(final_name_dest), len(content)
+    # return content, total_htm, len(final_name_dest), len(content)
+    return content, total_htm
 
 
 # DIBAWAH UNTUK NGE TEST
