@@ -26,7 +26,7 @@ Yogyakarta is one of the cities that attracts many traveller and students outsid
 
 5 of our team are students from outside this city, and we find it difficult when we want to travel in Yogyakarta. Some of us are just asking our friends to recommend the places and it can be biased because the preferences might be different.  In order to tackle this problem, we build an app to recommend the user where should they go in Yogyakarta with just a few inputs.
 
-# REPOSITORY
+# Repository
 <p align="center">
   <a href="https://github.com/gallangsdw/Kuylah-app"><img alt="Repository" src="https://img.shields.io/badge/Repository-Android-green"></a>
   <a href="https://github.com/IrfanChairurrachman/kuylah-backend"><img alt="Repository" src="https://img.shields.io/badge/Repository-Backend-orange"></a>
